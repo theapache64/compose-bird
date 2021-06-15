@@ -64,7 +64,20 @@ fun main() {
                     Text("🐦 Compose Bird!")
                 }
 
-                if (gameFrame.isGameOver) {
+                Div(
+                    attrs = {
+                        style {
+                            display(DisplayStyle.Flex)
+                            justifyContent(JustifyContent.Center)
+                        }
+                    }
+                ) {
+                    Text("Score: ${gameFrame.score}")
+                }
+
+                Br()
+
+                if (gameFrame.isGameOver || gameFrame.isGameWon) {
                     Div(
                         attrs = {
                             style {
@@ -81,7 +94,12 @@ fun main() {
                                 }
                             }
                         ) {
-                            Text("💀 Game Over!")
+                            if (gameFrame.isGameWon) {
+                                Text("🚀 Won the game! 🚀")
+                            } else {
+                                // Game over
+                                Text("💀 Game Over 💀")
+                            }
                         }
 
                         Button(
@@ -91,7 +109,7 @@ fun main() {
                                 }
                             }
                         ) {
-                            Text("RETRY!")
+                            Text("Try Again!")
                         }
                     }
 
@@ -110,7 +128,6 @@ fun main() {
                                         val isBird =
                                             !isTube && columnIndex == ComposeBirdGame.BIRD_COLUMN && rowIndex == gameFrame.birdPos
 
-                                        // Constructing tube
                                         if (isTube || isBird) {
                                             checked(true)
                                         } else {
@@ -123,15 +140,14 @@ fun main() {
                                             disabled(true)
                                         }
 
+                                        // Giving an ID to the radio
                                         val radioId = when {
                                             isBird -> "rBird"
                                             isTube -> "rTube"
-                                            else -> null
+                                            else -> "rEmpty"
                                         }
+                                        id(radioId)
 
-                                        if (radioId != null) {
-                                            id(radioId)
-                                        }
 
                                         style {
                                             width(25.px)

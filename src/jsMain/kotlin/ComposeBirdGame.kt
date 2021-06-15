@@ -11,7 +11,7 @@ class ComposeBirdGame : Game {
         const val ROWS = 9
         const val BIRD_COLUMN = 1
         private const val TUBES_START_FROM = (COLUMNS * 0.75).toInt()
-        private const val TOTAL_TUBES = 50
+        private const val TOTAL_TUBES = 10
         private const val TUBE_SPACE = 3
         private const val TUBE_WEIGHT = 500
         private const val BIRD_WEIGHT = 300
@@ -23,7 +23,9 @@ class ComposeBirdGame : Game {
             GameFrame(
                 birdPos = ROWS / 2,
                 tubes = buildLevel(),
-                isGameOver = false
+                isGameOver = false,
+                isGameWon = false,
+                score = 0
             )
         )
     }
@@ -102,6 +104,9 @@ class ComposeBirdGame : Game {
                 }
             }
 
+            val newScore = newTubes.filter { it.position < BIRD_COLUMN }.size
+            val newIsGameWon = newScore >= TOTAL_TUBES // All tubes passed
+
             // Checking if bird gone out
             val newIsGameOver = if (newBirdPos < 0 || newBirdPos >= ROWS || isCollidedWithTube(newBirdPos, tubes)) {
                 true
@@ -112,7 +117,9 @@ class ComposeBirdGame : Game {
             copy(
                 isGameOver = newIsGameOver,
                 tubes = newTubes,
-                birdPos = newBirdPos
+                birdPos = newBirdPos,
+                score = newScore,
+                isGameWon = newIsGameWon
             )
         }
     }
