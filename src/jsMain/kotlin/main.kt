@@ -33,6 +33,10 @@ fun main() {
         }
     })
 
+    body.onclick = {
+        game.moveBirdUp()
+    }
+
     renderComposable(rootElementId = "root") {
 
         Div(
@@ -40,6 +44,9 @@ fun main() {
                 style {
                     display(DisplayStyle.Flex)
                     justifyContent(JustifyContent.Center)
+                }
+                onClick {
+                    game.moveBirdUp()
                 }
             }
         ) {
