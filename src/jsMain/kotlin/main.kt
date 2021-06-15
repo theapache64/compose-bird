@@ -1,6 +1,7 @@
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.attributes.checked
@@ -76,22 +77,21 @@ fun main() {
                         H2(
                             attrs = {
                                 style {
-                                    display(DisplayStyle.Flex)
-                                    justifyContent(JustifyContent.Center)
+                                    alignSelf(AlignSelf.Center)
                                 }
                             }
                         ) {
                             Text("💀 Game Over!")
                         }
 
-                        P(
+                        Button(
                             attrs = {
-                                style {
-                                    alignSelf(AlignSelf.End)
+                                onClick {
+                                    window.location.reload()
                                 }
                             }
                         ) {
-                            Text("refresh to retry!")
+                            Text("RETRY!")
                         }
                     }
 
@@ -110,7 +110,7 @@ fun main() {
                                         checked(tube?.coordinates?.get(rowIndex) ?: false)
 
                                         // Checking player position
-                                        if (columnIndex == ComposeBirdGame.PLAYER_COLUMN && rowIndex == gameFrame.birdPos) {
+                                        if (columnIndex == ComposeBirdGame.BIRD_COLUMN && rowIndex == gameFrame.birdPos) {
                                             // Player
                                             checked(true)
                                         }

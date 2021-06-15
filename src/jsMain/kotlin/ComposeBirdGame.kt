@@ -9,10 +9,11 @@ class ComposeBirdGame : Game {
     companion object {
         const val COLUMNS = 15
         const val ROWS = 9
-        const val PLAYER_COLUMN = 1
-        private const val TOTAL_TUBES = 50
+        const val BIRD_COLUMN = 1
+        private const val TUBES_START_FROM = (COLUMNS * 0.75).toInt()
+        private const val TOTAL_TUBES = 2
         private const val TUBE_SPACE = 3
-        private const val TUBE_WEIGHT = 800
+        private const val TUBE_WEIGHT = 500
         private const val BIRD_WEIGHT = 300
     }
 
@@ -32,7 +33,7 @@ class ComposeBirdGame : Game {
             var tubesAdded = 0
             var tubePosition = 0
             while (tubesAdded < TOTAL_TUBES) {
-                if (tubePosition != 0 && tubePosition % TUBE_SPACE == 0) { // To give space to each tube
+                if (tubePosition > TUBES_START_FROM && tubePosition % TUBE_SPACE == 0) { // To give space to each tube
                     add(
                         Tube(
                             tubePosition,
@@ -57,11 +58,11 @@ class ComposeBirdGame : Game {
         }
 
         val gap1 = tubeGapRange.random()
-        val gap2 = gap1 - 1
 
         // Adding gap to the full tube
         tube[gap1] = false
-        tube[gap2] = false
+        tube[gap1 - 1] = false
+        tube[gap1 - 2] = false
 
         return tube
     }
@@ -69,9 +70,9 @@ class ComposeBirdGame : Game {
     override val gameFrame: State<GameFrame> = _gameFrame
     private var tubeLastSteppedAt = 0.0
     private var birdLastSteppedAt = 0.0
+    private var shouldMoveBirdUp = false
     override fun step() {
         update {
-
             // Stepping tube
             val now = Date().getTime()
             val tubeDiff = now - tubeLastSteppedAt
@@ -86,27 +87,43 @@ class ComposeBirdGame : Game {
 
             // Stepping down bird
             val birdDiff = now - birdLastSteppedAt
-            val newBirdPos = if (birdDiff > BIRD_WEIGHT) {
-                birdLastSteppedAt = now
-                birdPos + 1
+            val newBirdPos = when {
+                shouldMoveBirdUp -> {
+                    birdLastSteppedAt = now
+                    shouldMoveBirdUp = false
+                    birdPos - 1 // move up
+                }
+                birdDiff > BIRD_WEIGHT -> {
+                    birdLastSteppedAt = now
+                    birdPos + 1 // move down
+                }
+                else -> {
+                    birdPos
+                }
+            }
+
+            // Checking if bird gone out
+            val newIsGameOver = if (newBirdPos < 0 || newBirdPos >= ROWS || isCollidedWithTube(newBirdPos, tubes)) {
+                true
             } else {
-                birdPos
+                isGameOver
             }
 
             copy(
+                isGameOver = newIsGameOver,
                 tubes = newTubes,
                 birdPos = newBirdPos
             )
         }
     }
 
+    private fun isCollidedWithTube(newBirdPos: Int, tubes: List<Tube>): Boolean {
+        val birdTube = tubes.find { it.position == BIRD_COLUMN }
+        return birdTube?.coordinates?.get(newBirdPos) ?: false
+    }
+
     override fun moveBirdUp() {
-        update {
-            birdLastSteppedAt = Date().getTime()
-            copy(
-                birdPos = birdPos - 1
-            )
-        }
+        shouldMoveBirdUp = true
     }
 
     private inline fun update(func: GameFrame.() -> GameFrame) {
