@@ -1,14 +1,17 @@
-![](cover.jpeg)
+# 🐦 Compose Bird
 
-# compose-web-template
+![](demo.gif)
 
-![buildStatus](https://img.shields.io/github/workflow/status/theapache64/compose-web-template/Java%20CI%20with%20Gradle?style=plastic)
 ![latestVersion](https://img.shields.io/github/v/release/theapache64/compose-web-template)
 <a href="https://twitter.com/theapache64" target="_blank">
 <img alt="Twitter: theapache64" src="https://img.shields.io/twitter/follow/theapache64.svg?style=social" />
 </a>
 
-> A basic compose web project template
+> A flappy bird clone using Compose Web and radio button
+
+## ▶️ Play
+
+- https://theapache64.github.io/compose-bird/
 
 ## 🏃 Run
 
