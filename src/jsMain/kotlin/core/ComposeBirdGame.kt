@@ -1,6 +1,9 @@
+package core
+
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import data.GameFrame
 import data.Tube
 import kotlin.js.Date
 

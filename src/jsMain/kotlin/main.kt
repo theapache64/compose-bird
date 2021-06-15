@@ -1,5 +1,8 @@
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import core.ComposeBirdGame
+import core.Game
+import data.GameFrame
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.delay
@@ -19,6 +22,8 @@ fun main() {
     val game: Game = ComposeBirdGame()
 
     val body = document.getElementsByTagName("body")[0] as HTMLElement
+
+    // Enabling keyboard control
     body.addEventListener("keyup", {
         when ((it as KeyboardEvent).keyCode) {
             38 -> { // Arrow up
@@ -38,9 +43,10 @@ fun main() {
             }
         ) {
 
-
+            // The current frame!
             val gameFrame by game.gameFrame
 
+            // Igniting the game loop
             LaunchedEffect(Unit) {
                 while (!gameFrame.isGameOver) {
                     delay(60)
@@ -48,33 +54,11 @@ fun main() {
                 }
             }
 
-            println("Rendering...")
-
-            // Game area
             Div {
 
-                H1(
-                    attrs = {
-                        style {
-                            display(DisplayStyle.Flex)
-                            justifyContent(JustifyContent.Center)
-                        }
-                    }
-                ) {
-                    Text("🐦 Compose Bird!")
-                }
-
-                Div(
-                    attrs = {
-                        style {
-                            display(DisplayStyle.Flex)
-                            justifyContent(JustifyContent.Center)
-                        }
-                    }
-                ) {
-                    Text("Score: ${gameFrame.score}")
-                }
-
+                // Title
+                GameTitle()
+                Score(gameFrame)
                 Br()
 
                 if (gameFrame.isGameOver || gameFrame.isGameWon) {
@@ -87,30 +71,8 @@ fun main() {
                             }
                         }
                     ) {
-                        H2(
-                            attrs = {
-                                style {
-                                    alignSelf(AlignSelf.Center)
-                                }
-                            }
-                        ) {
-                            if (gameFrame.isGameWon) {
-                                Text("🚀 Won the game! 🚀")
-                            } else {
-                                // Game over
-                                Text("💀 Game Over 💀")
-                            }
-                        }
-
-                        Button(
-                            attrs = {
-                                onClick {
-                                    window.location.reload()
-                                }
-                            }
-                        ) {
-                            Text("Try Again!")
-                        }
+                        GameStatus(gameFrame)
+                        TryAgain()
                     }
 
 
@@ -129,25 +91,20 @@ fun main() {
                                             !isTube && columnIndex == ComposeBirdGame.BIRD_COLUMN && rowIndex == gameFrame.birdPos
 
                                         if (isTube || isBird) {
+                                            // if it's either a tube node or bird, check it
                                             checked(true)
                                         } else {
+                                            // otherwise, uncheck
                                             checked(false)
                                         }
 
                                         if (isBird) {
+                                            // if it's a bird, enable it. (to change to blue color)
                                             disabled(false)
                                         } else {
+                                            // if it's not a bird, disable it. (to change to grey color)
                                             disabled(true)
                                         }
-
-                                        // Giving an ID to the radio
-                                        val radioId = when {
-                                            isBird -> "rBird"
-                                            isTube -> "rTube"
-                                            else -> "rEmpty"
-                                        }
-                                        id(radioId)
-
 
                                         style {
                                             width(25.px)
@@ -163,5 +120,60 @@ fun main() {
 
         }
 
+    }
+}
+
+private fun TryAgain() {
+    Button(
+        attrs = {
+            onClick {
+                window.location.reload()
+            }
+        }
+    ) {
+        Text("Try Again!")
+    }
+}
+
+private fun GameStatus(gameFrame: GameFrame) {
+    H2(
+        attrs = {
+            style {
+                alignSelf(AlignSelf.Center)
+            }
+        }
+    ) {
+        if (gameFrame.isGameWon) {
+            Text("🚀 Won the game! 🚀")
+        } else {
+            // core.Game over
+            Text("💀 Game Over 💀")
+        }
+    }
+}
+
+private fun Score(gameFrame: GameFrame) {
+    Div(
+        attrs = {
+            style {
+                display(DisplayStyle.Flex)
+                justifyContent(JustifyContent.Center)
+            }
+        }
+    ) {
+        Text("Score: ${gameFrame.score}")
+    }
+}
+
+private fun GameTitle() {
+    H1(
+        attrs = {
+            style {
+                display(DisplayStyle.Flex)
+                justifyContent(JustifyContent.Center)
+            }
+        }
+    ) {
+        Text("🐦 Compose Bird!")
     }
 }

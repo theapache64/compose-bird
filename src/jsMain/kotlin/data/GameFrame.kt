@@ -1,6 +1,11 @@
 package data
 
+import data.Tube
+
 data class GameFrame(
-    val playerPos: Int,
-    val tubes: List<Tube>
+    val birdPos: Int,
+    val tubes: List<Tube>,
+    val isGameOver: Boolean,
+    val isGameWon : Boolean,
+    val score: Int,
 )
