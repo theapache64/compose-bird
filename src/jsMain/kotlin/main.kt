@@ -102,17 +102,35 @@ fun main() {
                             repeat(ComposeBirdGame.COLUMNS) { columnIndex ->
                                 Input(
                                     InputType.Radio,
+
                                     attrs = {
-                                        disabled(true) // no external interaction
+
                                         val tube = gameFrame.tubes.find { it.position == columnIndex }
+                                        val isTube = tube?.coordinates?.get(rowIndex) ?: false
+                                        val isBird =
+                                            !isTube && columnIndex == ComposeBirdGame.BIRD_COLUMN && rowIndex == gameFrame.birdPos
 
                                         // Constructing tube
-                                        checked(tube?.coordinates?.get(rowIndex) ?: false)
-
-                                        // Checking player position
-                                        if (columnIndex == ComposeBirdGame.BIRD_COLUMN && rowIndex == gameFrame.birdPos) {
-                                            // Player
+                                        if (isTube || isBird) {
                                             checked(true)
+                                        } else {
+                                            checked(false)
+                                        }
+
+                                        if (isBird) {
+                                            disabled(false)
+                                        } else {
+                                            disabled(true)
+                                        }
+
+                                        val radioId = when {
+                                            isBird -> "rBird"
+                                            isTube -> "rTube"
+                                            else -> null
+                                        }
+
+                                        if (radioId != null) {
+                                            id(radioId)
                                         }
 
                                         style {
