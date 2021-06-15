@@ -20,6 +20,11 @@ class ComposeBirdGame : Game {
         private const val BIRD_WEIGHT = 300
     }
 
+    private val tubeGapRange = 2 until ROWS
+    private var tubeLastSteppedAt = 0.0
+    private var birdLastSteppedAt = 0.0
+    private var shouldMoveBirdUp = false
+
     private val _gameFrame: MutableState<GameFrame> by lazy {
         mutableStateOf(
             // First frame
@@ -52,19 +57,18 @@ class ComposeBirdGame : Game {
         }
     }
 
-    private val tubeGapRange = 2 until ROWS
+
 
     private fun buildRandomTube(): List<Boolean> {
-
+        // creating a full tube
         val tube = mutableListOf<Boolean>().apply {
             repeat(ROWS) {
                 add(true)
             }
         }
 
+        // Adding gaps in random middle positions to make it two tubes.
         val gap1 = tubeGapRange.random()
-
-        // Adding gap to the full tube
         tube[gap1] = false
         tube[gap1 - 1] = false
         tube[gap1 - 2] = false
@@ -73,13 +77,12 @@ class ComposeBirdGame : Game {
     }
 
     override val gameFrame: State<GameFrame> = _gameFrame
-    private var tubeLastSteppedAt = 0.0
-    private var birdLastSteppedAt = 0.0
-    private var shouldMoveBirdUp = false
+
     override fun step() {
         update {
-            // Stepping tube
             val now = Date().getTime()
+
+            // Stepping tube
             val tubeDiff = now - tubeLastSteppedAt
             val newTubes = if (tubeDiff > TUBE_WEIGHT) {
                 tubeLastSteppedAt = now
@@ -90,7 +93,7 @@ class ComposeBirdGame : Game {
                 tubes
             }
 
-            // Stepping down bird
+            // Stepping bird position
             val birdDiff = now - birdLastSteppedAt
             val newBirdPos = when {
                 shouldMoveBirdUp -> {
@@ -107,8 +110,8 @@ class ComposeBirdGame : Game {
                 }
             }
 
-            val newScore = newTubes.filter { it.position < BIRD_COLUMN }.size
-            val newIsGameWon = newScore >= TOTAL_TUBES // All tubes passed
+            val newScore = newTubes.filter { it.position < BIRD_COLUMN }.size // All passed tube
+            val newIsGameWon = newScore >= TOTAL_TUBES // If all tubes passed
 
             // Checking if bird gone out
             val newIsGameOver = if (newBirdPos < 0 || newBirdPos >= ROWS || isCollidedWithTube(newBirdPos, tubes)) {

@@ -1,3 +1,4 @@
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import core.ComposeBirdGame
@@ -123,6 +124,7 @@ fun main() {
     }
 }
 
+@Composable
 private fun TryAgain() {
     Button(
         attrs = {
@@ -135,6 +137,7 @@ private fun TryAgain() {
     }
 }
 
+@Composable
 private fun GameStatus(gameFrame: GameFrame) {
     H2(
         attrs = {
@@ -152,6 +155,7 @@ private fun GameStatus(gameFrame: GameFrame) {
     }
 }
 
+@Composable
 private fun Score(gameFrame: GameFrame) {
     Div(
         attrs = {
@@ -165,6 +169,7 @@ private fun Score(gameFrame: GameFrame) {
     }
 }
 
+@Composable
 private fun GameTitle() {
     H1(
         attrs = {
