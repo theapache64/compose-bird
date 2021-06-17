@@ -14,13 +14,14 @@ class ComposeBirdGame : Game {
         const val ROWS = 9
         const val BIRD_COLUMN = 1
         private const val TUBES_START_FROM = (COLUMNS * 0.75).toInt()
-        private const val TOTAL_TUBES = 10
-        private const val TUBE_SPACE = 3
+        const val TOTAL_TUBES = 10
+        private const val TUBE_HORIZONTAL_DISTANCE = 3
+        private const val TUBE_VERTICAL_DISTANCE = 3
         private const val TUBE_WEIGHT = 500
         private const val BIRD_WEIGHT = 300
     }
 
-    private val tubeGapRange = 2 until ROWS
+    private val tubeGapRange = TUBE_VERTICAL_DISTANCE until ROWS
     private var tubeLastSteppedAt = 0.0
     private var birdLastSteppedAt = 0.0
     private var shouldMoveBirdUp = false
@@ -43,7 +44,7 @@ class ComposeBirdGame : Game {
             var tubesAdded = 0
             var tubePosition = 0
             while (tubesAdded < TOTAL_TUBES) {
-                if (tubePosition > TUBES_START_FROM && tubePosition % TUBE_SPACE == 0) { // To give space to each tube
+                if (tubePosition > TUBES_START_FROM && tubePosition % TUBE_HORIZONTAL_DISTANCE == 0) { // To give space to each tube
                     add(
                         Tube(
                             tubePosition,
@@ -58,7 +59,6 @@ class ComposeBirdGame : Game {
     }
 
 
-
     private fun buildRandomTube(): List<Boolean> {
         // creating a full tube
         val tube = mutableListOf<Boolean>().apply {
@@ -69,9 +69,9 @@ class ComposeBirdGame : Game {
 
         // Adding gaps in random middle positions to make it two tubes.
         val gap1 = tubeGapRange.random()
-        tube[gap1] = false
-        tube[gap1 - 1] = false
-        tube[gap1 - 2] = false
+        repeat(TUBE_VERTICAL_DISTANCE) { index ->
+            tube[gap1 - index] = false
+        }
 
         return tube
     }

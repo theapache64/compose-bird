@@ -172,7 +172,7 @@ private fun Score(gameFrame: GameFrame) {
             }
         }
     ) {
-        Text("Score: ${gameFrame.score}")
+        Text("Your Score: ${gameFrame.score} || Top Score: ${ComposeBirdGame.TOTAL_TUBES}")
     }
 }
 
