@@ -15,7 +15,7 @@
 
 ## 🚛 Moved
 
-- This repository has moved to [compose-jb/web-compose-bird](https://github.com/JetBrains/compose-jb/tree/master/examples/web-compose-bird). You can find the updated version there. 
+- This repository has been moved to [compose-jb/web-compose-bird](https://github.com/JetBrains/compose-jb/tree/master/examples/web-compose-bird). You can find the updated version there. 
 
 ## 🏃 Run
 
